@@ -1,6 +1,9 @@
 package com.example.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.example.domain.*;
 import com.example.repository.*;
@@ -19,9 +22,24 @@ public class MathDataService {
 
   private static final int PAGE_SIZE = 30;
 
+  public List<Item> showAllItems() {
+    List<Item> itemList = itemRepository.findByPage();
+    return itemList;
+  }
 
-  public List<Item> showAllItems(){
-  List<Item> itemList = itemRepository.findByPage();
-  return itemList;
+  public List<String> showAllParentCategory() {
+    List<String> parentList = categoryRepository.findAllParent().stream().sorted(Comparator.naturalOrder())
+        .collect(Collectors.toList());
+    return parentList;
+  }
+  public List<String> showAllChildCategory(String parent) {
+    List<String> childList = categoryRepository.findAllChildByParent(parent).stream().sorted(Comparator.naturalOrder())
+        .collect(Collectors.toList());
+    return childList;
+  }
+  public List<String> showAllGrandChildCategory(String parent, String child) {
+    List<String> childList = categoryRepository.findAllGrandChildByParentAndChild(parent, child).stream().sorted(Comparator.naturalOrder())
+        .collect(Collectors.toList());
+    return childList;
   }
 }
