@@ -14,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MathDataService {
   @Autowired
   private CategoryRepository categoryRepository;
-
   @Autowired
   private ItemRepository itemRepository;
 
-  // public List<Item> showAllItems(){
-  //   List<Item> itemList = itemRepository.findAll();
-  // }
+  private static final int PAGE_SIZE = 30;
+
+
+  public List<Item> showAllItems(){
+  List<Item> itemList = itemRepository.findByPage();
+  return itemList;
+  }
 }
