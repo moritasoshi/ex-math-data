@@ -32,7 +32,7 @@ public class MathDataController {
   public String index(Model model, SearchForm form) {
     Integer page = form.getPage();
     Integer totalPage = (Integer) session.getAttribute("totalPage");
-    if (isNull(page) || page <= 0 || page > totalPage) {
+    if (isNull(page) || page <= 0 || isNull(totalPage) || page > totalPage) {
       page = 1;
     }
     ItemPage item = new ItemPage(form.getItemName(), form.getBrand(), form.getParentCategory(), form.getChildCategory(),
