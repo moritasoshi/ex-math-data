@@ -60,7 +60,7 @@
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
-          <select class="form-control parent-category"  th:field="*{parentCategory}">
+          <select class="form-control parent-category" th:field="*{parentCategory}">
             <option value="">- parentCategory -</option>
           </select>
           <select class="form-control child-category" th:field="*{childCategory}">
@@ -70,9 +70,6 @@
             <option value="">- grandChild -</option>
           </select>
         </div>
-        <input type="hidden" th:field="*{parentCategory}">
-        <input type="hidden" th:field="*{childCategory}">
-        <input type="hidden" th:field="*{grandChildCategory}">
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
           <input type="text" class="form-control" th:field="*{brand}" placeholder="brand" />
@@ -81,9 +78,13 @@
         <button type="submit" class="btn btn-default"><i class="fa fa-angle-double-right"></i> search</button>
       </form>
       <div style="font-weight: bold;">maches&nbsp;<span th:text="${size}"></span>&nbsp;items</div>
-      
     </div>
-
+    <div class="category" th:object="${searchForm}">
+      <input type="hidden" th:field="*{parentCategory}">
+      <input type="hidden" th:field="*{childCategory}">
+      <input type="hidden" th:field="*{grandChildCategory}">
+    </div>
+      
     <!-- pagination -->
     <div class="pages">
       <nav class="page-nav">
