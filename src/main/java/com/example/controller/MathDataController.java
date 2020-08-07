@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.example.domain.Item;
+import com.example.domain.ItemPage;
 import com.example.form.SearchForm;
 import com.example.service.MathDataService;
 
@@ -28,17 +29,15 @@ public class MathDataController {
 
   @RequestMapping("")
   public String index(Model model, SearchForm form) {
-    List<Item> itemList;
     Item item = new Item(form.getItemName(), form.getBrand(), form.getParentCategory(), form.getChildCategory(),
-        form.getGrandChildCategory());
-    itemList = service.showAllItems(item);
-    // if (Objects.isNull(form.getItemName()) || "".equals(form.getItemName())) {
-    // itemList = service.showAllItems();
-    // } else {
-    // itemList = service.showAllItems(form.getItemName());
-    // }
+    form.getGrandChildCategory());
+
+    ItemPage itemPage = service.showAllItems(item);
+    List<Item> itemList = itemPage.getItemList();
+    Integer size = itemPage.getSize();
     model.addAttribute("searchForm", form);
     model.addAttribute("itemList", itemList);
+    model.addAttribute("size", size);
     return "list";
   }
 

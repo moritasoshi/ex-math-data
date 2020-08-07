@@ -70,6 +70,9 @@
             <option value="">- grandChild -</option>
           </select>
         </div>
+        <input type="hidden" th:field="*{parentCategory}">
+        <input type="hidden" th:field="*{childCategory}">
+        <input type="hidden" th:field="*{grandChildCategory}">
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
           <input type="text" class="form-control" th:field="*{brand}" placeholder="brand" />
@@ -77,6 +80,8 @@
         <div class="form-group"></div>
         <button type="submit" class="btn btn-default"><i class="fa fa-angle-double-right"></i> search</button>
       </form>
+      <div style="font-weight: bold;">maches&nbsp;<span th:text="${size}"></span>&nbsp;items</div>
+      
     </div>
 
     <!-- pagination -->
@@ -144,7 +149,7 @@
       <nav class="page-nav">
         <ul class="pager">
           <li class="previous"><a href="#">&larr; prev</a></li>
-          <li class="next"><a href="#">next &rarr;</a></li>
+          <li class="next"><a th:href="@{/(page=${pageNumber}, itemName=${itemName}, id=${id})}">next &rarr;</a></li>
         </ul>
       </nav>
       <!-- ページ番号を指定して表示するフォーム -->

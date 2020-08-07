@@ -18,23 +18,17 @@ public class MathDataService {
   private CategoryRepository categoryRepository;
   @Autowired
   private ItemRepository itemRepository;
+  @Autowired
+  private ItemPageRepository itemPageRepository;
 
   private static final int PAGE_SIZE = 30;
   
-  public List<Item> showAllItems() {
-    List<Item> itemList = itemRepository.findByPage();
-    return itemList;
-  }
-  public List<Item> showAllItems(Item item) {
-    // 全て記述されている場合
-    List<Item> itemList = itemRepository.findByAll(item);
-    // 何も記述されていない場合
-    // List<Item> itemList = itemRepository.findByPage();
-    return itemList;
-  }
-  
-  public List<Item> showAllItems(String name) {
-    List<Item> itemList = itemRepository.findByName(name);
+  // public List<Item> showAllItems(Item item) {
+  //   List<Item> itemList = itemRepository.findByAll(item);
+  //   return itemList;
+  // }
+  public ItemPage showAllItems(Item item) {
+    ItemPage itemList = itemPageRepository.findByAll(item);
     return itemList;
   }
 

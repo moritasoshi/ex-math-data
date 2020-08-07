@@ -1,7 +1,6 @@
 package com.example.repository;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,7 +106,7 @@ public class ItemRepository {
     sql.append(parentSql);
     sql.append(childSql);
     sql.append(grandChildSql);
-    
+
     sql.append("ORDER BY ite.id LIMIT 30 OFFSET 0");
     List<Item> itemList = template.query(sql.toString(), paramMap, ITE_ROW_MAPPER);
     return itemList;
