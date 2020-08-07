@@ -123,29 +123,6 @@
             <td class="item-brand" th:text="*{brand}"><a href="">Razer</a></td>
             <td class="item-condition" th:text="*{condition}">3</td>
           </tr>
-          <tr>
-            <td class="item-name"><a href="./detail.html">Razer BlackWidow Chroma Keyboard</a></td>
-            <td class="item-price">52.0</td>
-            <td class="item-category"><a href="">Electronics</a> / <a href="">Computers &amp; Tablets</a> / <a
-                href="">Components &amp; Parts</a></td>
-            <td class="item-brand"><a href="">Razer</a></td>
-            <td class="item-condition">3</td>
-          </tr>
-          <tr>
-            <td class="item-name"><a href="./detail.html">AVA-VIV Blouse</a></td>
-            <td class="item-price">10.0</td>
-            <td class="item-category">Women / Tops &amp; Blouses / Blouse</td>
-            <td class="item-brand">Target</td>
-            <td class="item-condition">1</td>
-          </tr>
-          <tr>
-            <td class="item-name"><a href="./detail.html">Leather Horse Statues</a></td>
-            <td class="item-price">35.0</td>
-            <td class="item-category">Home / Home Décor / Home Décor Accents</td>
-            <td class="item-brand"></td>
-            <td class="item-condition">1</td>
-          </tr>
-
         </tbody>
       </table>
     </div>
@@ -165,11 +142,16 @@
       <!-- ページ番号を指定して表示するフォーム -->
       <div id="select-page">
         <div style="font-weight: bold;">Now&nbsp;on&nbsp;page&nbsp;<span th:text="${page}"></span></div>
-        <form class="form-inline">
+        <form class="form-inline" th:object="${searchForm}">
           <div class="form-group">
             <div class="input-group col-xs-6">
               <label></label>
-              <input type="text" class="form-control" />
+              <input type="text" class="form-control" th:name="page"  placeholder="page" />
+              <input type="hidden" th:field="*{itemName}" />
+              <input type="hidden" th:field="*{parentCategory}" />
+              <input type="hidden" th:field="*{childCategory}" />
+              <input type="hidden" th:field="*{grandChildCategory}" />
+              <input type="hidden" th:field="*{brand}" />
               <!-- 総ページ数 -->
               <div class="input-group-addon">/ <span th:text="${totalPage}"></span></div>
             </div>
