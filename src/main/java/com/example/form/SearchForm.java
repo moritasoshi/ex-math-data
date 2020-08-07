@@ -9,4 +9,6 @@ public class SearchForm {
   private String childCategory = "";
   private String grandChildCategory = "";
   private String brand = "";
+
+  private Integer page = 1;
 }

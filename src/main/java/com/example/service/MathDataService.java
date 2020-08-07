@@ -17,8 +17,6 @@ public class MathDataService {
   @Autowired
   private CategoryRepository categoryRepository;
   @Autowired
-  private ItemRepository itemRepository;
-  @Autowired
   private ItemPageRepository itemPageRepository;
 
   private static final int PAGE_SIZE = 30;
@@ -27,8 +25,9 @@ public class MathDataService {
   //   List<Item> itemList = itemRepository.findByAll(item);
   //   return itemList;
   // }
-  public ItemPage showAllItems(Item item) {
-    ItemPage itemList = itemPageRepository.findByAll(item);
+  public ItemPage showAllItems(ItemPage itemPage) {
+    itemPage.setPageSize(PAGE_SIZE);
+    ItemPage itemList = itemPageRepository.findByAll(itemPage);
     return itemList;
   }
 

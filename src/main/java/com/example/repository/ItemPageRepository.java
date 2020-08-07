@@ -10,7 +10,6 @@ import com.example.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -42,15 +41,18 @@ public class ItemPageRepository {
     return count;
   }
 
-  public ItemPage findByAll(Item item) {
+  public ItemPage findByAll(ItemPage itemPage) {
     StringBuilder sql = new StringBuilder();
     StringBuilder sizeSql = new StringBuilder();
-    Map<String, String> paramMap = new HashMap<>();
-    String name = item.getName();
-    String brand = item.getBrand();
-    String parent = item.getParent();
-    String child = item.getChild();
-    String grandChild = item.getGrandChild();
+    Map<String, Object> paramMap = new HashMap<>();
+    String name = itemPage.getName();
+    String brand = itemPage.getBrand();
+    String parent = itemPage.getParent();
+    String child = itemPage.getChild();
+    String grandChild = itemPage.getGrandChild();
+    Integer page = itemPage.getPage();
+    Integer limit = itemPage.getPageSize();
+    Integer offset = limit * (page - 1);
 
     String selectSql = "SELECT ite.id AS id, ite.name AS name, ite.price AS price, cat1.name AS parent, cat2.name AS child, cat3.name AS grand_child, ite.brand AS brand, ite.CONDITION AS CONDITION, ite.shipping AS shipping, ite.description AS description ";
     String fromSql = "FROM items AS ite JOIN relations AS rel1 ON  ite.category = rel1.descendant_id JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id JOIN category AS cat3 ON  rel1.descendant_id = cat3.id WHERE rel2.ancestor_id < rel1.ancestor_id AND rel1.ancestor_id < rel1.descendant_id ";
@@ -59,10 +61,10 @@ public class ItemPageRepository {
     String parentSql = "AND cat1.name LIKE :parent ";
     String childSql = "AND cat2.name LIKE :child ";
     String grandChildSql = "AND cat3.name LIKE :grandChild ";
-    String orderSql = "ORDER BY ite.id LIMIT 30 OFFSET 0";
+    String orderSql = "ORDER BY ite.id LIMIT :limit OFFSET :offset";
+
     // name
     paramMap.put("name", "%" + name + "%");
-
     // brand
     if ("".equals(brand)) {
       brandSql = ""; // brand指定がない場合はWHERE条件から排除
@@ -87,6 +89,9 @@ public class ItemPageRepository {
     } else {
       paramMap.put("grandChild", grandChild);
     }
+    // LIMIT OFFSET
+    paramMap.put("limit", limit);
+    paramMap.put("offset", offset);
 
     // SQL文の生成
     sql.append(selectSql);
@@ -110,6 +115,11 @@ public class ItemPageRepository {
     sizeSql.append(grandChildSql);
     Integer size = template.queryForObject(sizeSql.toString(), paramMap, Integer.class);
 
-    return new ItemPage(itemList, size);
+    ItemPage result = new ItemPage();
+    result.setItemList(itemList);
+    result.setSize(size);
+    result.setPage(page);
+    result.setTotalPage(size / limit + 1);
+    return result;
   }
 }

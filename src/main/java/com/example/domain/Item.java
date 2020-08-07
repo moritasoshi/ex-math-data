@@ -1,7 +1,5 @@
 package com.example.domain;
 
-import java.util.Map;
-
 import lombok.Data;
 
 @Data
