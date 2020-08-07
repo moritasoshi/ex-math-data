@@ -9,9 +9,7 @@ import com.example.domain.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,26 +18,19 @@ public class ItemPageRepository {
   private NamedParameterJdbcTemplate template;
 
   private static final RowMapper<Item> ITEM_ROW_MAPPER = (rs, i) -> {
-    Item Item = new Item();
-    Item.setId(rs.getInt("id"));
-    Item.setName(rs.getString("name"));
-    Item.setCondition(rs.getInt("condition"));
-    Item.setBrand(rs.getString("brand"));
-    Item.setPrice(rs.getDouble("price"));
-    Item.setShipping(rs.getInt("shipping"));
-    Item.setDescription(rs.getString("description"));
-    Item.setParent(rs.getString("parent"));
-    Item.setChild(rs.getString("child"));
-    Item.setGrandChild(rs.getString("grand_child"));
-    return Item;
+    Item item = new Item();
+    item.setId(rs.getInt("id"));
+    item.setName(rs.getString("name"));
+    item.setCondition(rs.getInt("condition"));
+    item.setBrand(rs.getString("brand"));
+    item.setPrice(rs.getDouble("price"));
+    item.setShipping(rs.getInt("shipping"));
+    item.setDescription(rs.getString("description"));
+    item.setParent(rs.getString("parent"));
+    item.setChild(rs.getString("child"));
+    item.setGrandChild(rs.getString("grand_child"));
+    return item;
   };
-
-  public Integer save(Item item) {
-    String sql = "INSERT INTO items VALUES (:id, :name, :condition, :category, :brand, :price, :shipping, :description)";
-    SqlParameterSource param = new BeanPropertySqlParameterSource(item);
-    Integer count = template.update(sql, param);
-    return count;
-  }
 
   public ItemPage findByAll(ItemPage itemPage) {
     StringBuilder sql = new StringBuilder();
