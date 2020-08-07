@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8" />
@@ -54,25 +54,25 @@
 
     <!-- 検索フォーム -->
     <div id="forms">
-      <form action="" class="form-inline" role="form">
+      <form th:action="@{/}" class="form-inline" role="form" th:object="${searchForm}" method="GET">
         <div class="form-group">
-          <input type="input" class="form-control" id="name" placeholder="item name" />
+          <input type="text" class="form-control" th:field="*{itemName}" id="name" placeholder="item name" />
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
-          <select class="form-control parent-category">
-            <option>- parentCategory -</option>
+          <select class="form-control parent-category"  th:field="*{parentCategory}">
+            <option value="">- parentCategory -</option>
           </select>
-          <select class="form-control child-category">
-            <option>- childCategory -</option>
+          <select class="form-control child-category" th:field="*{childCategory}">
+            <option value="">- childCategory -</option>
           </select>
-          <select class="form-control grandChild-category">
-            <option>- grandChild -</option>
+          <select class="form-control grandChild-category" th:field="*{grandChildCategory}">
+            <option value="">- grandChild -</option>
           </select>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="brand" />
+          <input type="text" class="form-control" th:field="*{brand}" placeholder="brand" />
         </div>
         <div class="form-group"></div>
         <button type="submit" class="btn btn-default"><i class="fa fa-angle-double-right"></i> search</button>
@@ -106,9 +106,9 @@
             <td class="item-name"><a href="./detail.html" th:text="*{name}">Razer BlackWidow Chroma Keyboard</a></td>
             <td class="item-price" th:text="*{price}">52.0</td>
             <td class="item-category">
-              <a href="" th:text="*{categoryPath.get('parent')}">Electronics</a> /
-              <a href="" th:text="*{categoryPath.get('child')}">Electronics</a> /
-              <a href="" th:text="*{categoryPath.get('grandChild')}">Electronics</a>
+              <a href="" th:text="*{parent}">Electronics</a> /
+              <a href="" th:text="*{child}">Electronics</a> /
+              <a href="" th:text="*{grandChild}">Electronics</a>
             <td class="item-brand" th:text="*{brand}"><a href="">Razer</a></td>
             <td class="item-condition" th:text="*{condition}">3</td>
           </tr>
