@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/")
@@ -63,8 +64,8 @@ public class MathDataController {
     return "detail";
   }
 
-  @RequestMapping("/edit")
-  public String edit(Integer id, Model model) {
+  @RequestMapping("/to-edit")
+  public String toEdit(Integer id, Model model) {
     EditForm editForm = new EditForm();
     Item item = service.showDetail(id);
     BeanUtils.copyProperties(item, editForm);
@@ -72,4 +73,12 @@ public class MathDataController {
     return "edit";
   }
 
+  @RequestMapping("/edit")
+  public String edit(EditForm form, RedirectAttributes redirectAttributes) {
+    Item item = new Item();
+    BeanUtils.copyProperties(form, item);
+    service.saveItem(item);
+    redirectAttributes.addAttribute("id", item.getId());
+    return "redirect:/detail/?id={id}";
+  }
 }

@@ -26,6 +26,10 @@ public class MathDataService {
     return itemRepository.loadItem(id);
   }
 
+  public void saveItem(Item item){
+    itemRepository.save(item);
+  }
+
   public ItemPage showAllItems(ItemPage itemPage) {
     itemPage.setPageSize(PAGE_SIZE);
     return itemPageRepository.findByAll(itemPage);
