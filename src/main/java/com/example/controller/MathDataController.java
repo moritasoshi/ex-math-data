@@ -39,14 +39,15 @@ public class MathDataController {
     // 不正な値のチェック
     Integer page = form.getPage();
     Integer totalPage = (Integer) session.getAttribute("totalPage");
-    if (isNull(page) || page <= 0 || isNull(totalPage) || page > totalPage) {
+    if (isNull(page) || page <= 0 || isNull(totalPage)) {
       page = 1;
+    } else if (page > totalPage) {
+      page = totalPage;
     }
 
     // 検索条件の設定
     ItemPage item = new ItemPage(form.getItemName(), form.getBrand(), form.getParentCategory(), form.getChildCategory(),
         form.getGrandChildCategory(), page);
-
     ItemPage itemPage = service.showAllItems(item);
 
     model.addAttribute("searchForm", form);
@@ -77,7 +78,8 @@ public class MathDataController {
   }
 
   @RequestMapping("/edit")
-  public String edit(@Validated EditForm form, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+  public String edit(@Validated EditForm form, BindingResult result, RedirectAttributes redirectAttributes,
+      Model model) {
     if (result.hasErrors()) {
       model.addAttribute("editForm", form);
       return "edit";
