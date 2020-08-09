@@ -18,7 +18,7 @@ public class ItemPageRepository {
   private NamedParameterJdbcTemplate template;
 
   private static final RowMapper<Item> ITEM_ROW_MAPPER = (rs, i) -> {
-    Item item = new Item();
+    final Item item = new Item();
     item.setId(rs.getInt("id"));
     item.setName(rs.getString("name"));
     item.setCondition(rs.getInt("condition"));
@@ -32,27 +32,27 @@ public class ItemPageRepository {
     return item;
   };
 
-  public ItemPage findByAll(ItemPage itemPage) {
-    StringBuilder sql = new StringBuilder();
-    StringBuilder sizeSql = new StringBuilder();
-    Map<String, Object> paramMap = new HashMap<>();
-    String name = itemPage.getName();
-    String brand = itemPage.getBrand();
-    String parent = itemPage.getParent();
-    String child = itemPage.getChild();
-    String grandChild = itemPage.getGrandChild();
-    Integer page = itemPage.getPage();
-    Integer limit = itemPage.getPageSize();
-    Integer offset = limit * (page - 1);
+  public ItemPage findByAll(final ItemPage itemPage) {
+    final StringBuilder sql = new StringBuilder();
+    final StringBuilder sizeSql = new StringBuilder();
+    final Map<String, Object> paramMap = new HashMap<>();
+    final String name = itemPage.getName();
+    final String brand = itemPage.getBrand();
+    final String parent = itemPage.getParent();
+    final String child = itemPage.getChild();
+    final String grandChild = itemPage.getGrandChild();
+    final Integer page = itemPage.getPage();
+    final Integer limit = itemPage.getPageSize();
+    final Integer offset = limit * (page - 1);
 
     String selectSql = "SELECT ite.id AS id, ite.name AS name, ite.price AS price, cat1.name AS parent, cat2.name AS child, cat3.name AS grand_child, ite.brand AS brand, ite.CONDITION AS CONDITION, ite.shipping AS shipping, ite.description AS description ";
-    String fromSql = "FROM items AS ite JOIN relations AS rel1 ON  ite.category = rel1.descendant_id JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id JOIN category AS cat3 ON  rel1.descendant_id = cat3.id WHERE rel2.ancestor_id < rel1.ancestor_id AND rel1.ancestor_id < rel1.descendant_id ";
-    String nameSql = "AND ite.name ILIKE :name ";
+    final String fromSql = "FROM test_items AS ite LEFT JOIN relations AS rel1 ON  ite.category = rel1.descendant_id LEFT JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id LEFT JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel1.descendant_id = cat3.id ";
+    final String nameSql = "WHERE ite.name ILIKE :name ";
     String brandSql = "AND ite.brand ILIKE :brand ";
-    String parentSql = "AND cat1.name LIKE :parent ";
-    String childSql = "AND cat2.name LIKE :child ";
-    String grandChildSql = "AND cat3.name LIKE :grandChild ";
-    String orderSql = "ORDER BY ite.id LIMIT :limit OFFSET :offset";
+    String parentSql = "AND (cat1.id ISNULL OR (cat1.depth=1 AND  cat1.name LIKE :parent)) ";
+    String childSql = "AND (cat2.id ISNULL OR (cat2.depth=2 AND  cat2.name LIKE :child)) ";
+    String grandChildSql = "AND (cat3.id ISNULL OR (cat3.depth=3 AND  cat3.name LIKE :grandChild)) ";
+    final String orderSql = "ORDER BY ite.id LIMIT :limit OFFSET :offset";
 
     // name
     paramMap.put("name", "%" + name + "%");
@@ -66,18 +66,21 @@ public class ItemPageRepository {
     if ("".equals(parent)) {
       paramMap.put("parent", "%");
     } else {
+      parentSql = "AND (cat1.depth=1 AND  cat1.name LIKE :parent) ";
       paramMap.put("parent", parent);
     }
     // child
     if ("".equals(child)) {
       paramMap.put("child", "%");
     } else {
+      childSql = "AND (cat1.depth=1 AND  cat1.name LIKE :child) ";
       paramMap.put("child", child);
     }
     // grandChild
     if ("".equals(grandChild)) {
       paramMap.put("grandChild", "%");
     } else {
+      grandChildSql = "AND (cat1.depth=1 AND  cat1.name LIKE :grandChild) ";
       paramMap.put("grandChild", grandChild);
     }
     // LIMIT OFFSET
@@ -93,7 +96,8 @@ public class ItemPageRepository {
     sql.append(childSql);
     sql.append(grandChildSql);
     sql.append(orderSql);
-    List<Item> itemList = template.query(sql.toString(), paramMap, ITEM_ROW_MAPPER);
+    final String str = sql.toString();
+    final List<Item> itemList = template.query(sql.toString(), paramMap, ITEM_ROW_MAPPER);
 
     // 検索条件にマッチする商品数を知りたい
     selectSql = "SELECT COUNT(*) ";
@@ -104,9 +108,9 @@ public class ItemPageRepository {
     sizeSql.append(parentSql);
     sizeSql.append(childSql);
     sizeSql.append(grandChildSql);
-    Integer size = template.queryForObject(sizeSql.toString(), paramMap, Integer.class);
+    final Integer size = template.queryForObject(sizeSql.toString(), paramMap, Integer.class);
 
-    ItemPage result = new ItemPage();
+    final ItemPage result = new ItemPage();
     result.setItemList(itemList);
     result.setSize(size);
     result.setPage(page);
