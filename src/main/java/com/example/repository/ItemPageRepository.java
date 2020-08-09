@@ -96,7 +96,6 @@ public class ItemPageRepository {
     sql.append(childSql);
     sql.append(grandChildSql);
     sql.append(orderSql);
-    final String str = sql.toString();
     final List<Item> itemList = template.query(sql.toString(), paramMap, ITEM_ROW_MAPPER);
 
     // 検索条件にマッチする商品数を知りたい
