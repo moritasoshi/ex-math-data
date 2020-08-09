@@ -55,10 +55,12 @@
     <!-- 検索フォーム -->
     <div id="forms">
       <form th:action="@{/}" class="form-inline" role="form" th:object="${searchForm}" method="GET">
+        <!-- name -->
         <div class="form-group">
           <input type="text" class="form-control" th:field="*{itemName}" id="name" placeholder="item name" />
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
+        <!-- category -->
         <div class="form-group">
           <select class="form-control parent-category" th:field="*{parentCategory}">
             <option value="">- parentCategory -</option>
@@ -71,6 +73,7 @@
           </select>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
+        <!-- brand -->
         <div class="form-group">
           <input type="text" class="form-control" th:field="*{brand}" placeholder="brand" />
         </div>
@@ -114,7 +117,8 @@
         </thead>
         <tbody>
           <tr th:each="item : ${itemList}" th:object="${item}">
-            <td class="item-name"><a href="./detail.html" th:text="*{name}">Razer BlackWidow Chroma Keyboard</a></td>
+            <td class="item-name"><a th:href="@{/detail(id=*{id})}" th:text="*{name}">Razer BlackWidow Chroma
+                Keyboard</a></td>
             <td class="item-price" th:text="*{price}">52.0</td>
             <td class="item-category">
               <a href="" th:text="*{parent}">Electronics</a> /
@@ -146,7 +150,7 @@
           <div class="form-group">
             <div class="input-group col-xs-6">
               <label></label>
-              <input type="text" class="form-control" th:name="page"  placeholder="page" />
+              <input type="text" class="form-control" th:name="page" placeholder="page" />
               <input type="hidden" th:field="*{itemName}" />
               <input type="hidden" th:field="*{parentCategory}" />
               <input type="hidden" th:field="*{childCategory}" />

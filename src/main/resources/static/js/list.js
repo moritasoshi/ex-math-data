@@ -42,7 +42,7 @@ $(function() {
 				for (const parent of parentList) {
 					if (parent == parentSelected) {
 						// 検索結果を表示させてる場合はセレクトボックスにカテゴリを表示
-						target.append($('<option>').html(parent).val(parent).prop('selected',true));
+						target.append($('<option>').html(parent).val(parent).prop('selected', true));
 						setUpChildCategoryS(parentSelected, childSelected);
 					} else {
 						target.append($('<option>').html(parent).val(parent));
@@ -92,7 +92,7 @@ $(function() {
 				for (const child of childList) {
 					if (child == childSelected) {
 						// 検索結果を表示させてる場合はセレクトボックスにカテゴリを表示
-						target.append($('<option>').html(child).val(child).prop('selected',true));
+						target.append($('<option>').html(child).val(child).prop('selected', true));
 						setUpGrandChildCategoryS(parentSelected, childSelected, grandChildSelected);
 					} else {
 						target.append($('<option>').html(child).val(child));
@@ -144,7 +144,7 @@ $(function() {
 				for (const grandChild of grandChildList) {
 					if (grandChild == grandChildSelected) {
 						// 検索結果を表示させてる場合はセレクトボックスにカテゴリを表示
-						target.append($('<option>').html(grandChild).val(grandChild).prop('selected',true));
+						target.append($('<option>').html(grandChild).val(grandChild).prop('selected', true));
 					} else {
 						target.append($('<option>').html(grandChild).val(grandChild));
 					}

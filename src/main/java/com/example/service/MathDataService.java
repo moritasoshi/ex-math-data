@@ -1,8 +1,6 @@
 package com.example.service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.example.domain.*;
 import com.example.repository.*;
@@ -14,36 +12,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class MathDataService {
+
   @Autowired
-  private CategoryRepository categoryRepository;
+  private ItemRepository itemRepository;
   @Autowired
   private ItemPageRepository itemPageRepository;
+  @Autowired
+  private CategoryRepository categoryRepository;
 
   private static final int PAGE_SIZE = 30;
-  
-  // public List<Item> showAllItems(Item item) {
-  //   List<Item> itemList = itemRepository.findByAll(item);
-  //   return itemList;
-  // }
+
+  public Item showDetail(Integer id) {
+    return itemRepository.loadItem(id);
+  }
+
   public ItemPage showAllItems(ItemPage itemPage) {
     itemPage.setPageSize(PAGE_SIZE);
-    ItemPage itemList = itemPageRepository.findByAll(itemPage);
-    return itemList;
+    return itemPageRepository.findByAll(itemPage);
   }
 
   public List<String> showAllParentCategory() {
-    List<String> parentList = categoryRepository.findAllParent().stream().sorted(Comparator.naturalOrder())
-        .collect(Collectors.toList());
-    return parentList;
+    return categoryRepository.findAllParent();
   }
+
   public List<String> showAllChildCategory(String parent) {
-    List<String> childList = categoryRepository.findAllChildByParent(parent).stream().sorted(Comparator.naturalOrder())
-        .collect(Collectors.toList());
-    return childList;
+    return categoryRepository.findAllChildByParent(parent);
   }
+
   public List<String> showAllGrandChildCategory(String parent, String child) {
-    List<String> childList = categoryRepository.findAllGrandChildByParentAndChild(parent, child).stream().sorted(Comparator.naturalOrder())
-        .collect(Collectors.toList());
-    return childList;
+    return categoryRepository.findAllGrandChildByParentAndChild(parent, child);
   }
 }
