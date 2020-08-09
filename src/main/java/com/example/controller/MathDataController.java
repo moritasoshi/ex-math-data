@@ -23,73 +23,91 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/")
 public class MathDataController {
-  @Autowired
-  private MathDataService service;
+	@Autowired
+	private MathDataService service;
 
-  @Autowired
-  private HttpSession session;
+	@Autowired
+	private HttpSession session;
 
-  @ModelAttribute
-  public SearchForm setUpSearchForm() {
-    return new SearchForm();
-  }
+	@ModelAttribute
+	public SearchForm setUpSearchForm() {
+		return new SearchForm();
+	}
 
-  @RequestMapping("")
-  public String index(Model model, SearchForm form) {
-    // 不正な値のチェック
-    Integer page = form.getPage();
-    Integer totalPage = (Integer) session.getAttribute("totalPage");
-    if (isNull(page) || page <= 0 || isNull(totalPage)) {
-      page = 1;
-    } else if (page > totalPage) {
-      page = totalPage;
-    }
+	////////////////////////////////////
+	//// 商品一覧画面の表示＆検索機能
+	////////////////////////////////////
 
-    // 検索条件の設定
-    ItemPage item = new ItemPage(form.getItemName(), form.getBrand(), form.getParentCategory(), form.getChildCategory(),
-        form.getGrandChildCategory(), page);
-    ItemPage itemPage = service.showAllItems(item);
+	@RequestMapping("")
+	public String index(Model model, SearchForm form) {
+		// 不正な値のチェック
+		Integer page = form.getPage();
+		Integer totalPage = (Integer) session.getAttribute("totalPage");
+		if (isNull(page) || page <= 0 || isNull(totalPage)) {
+			page = 1;
+		} else if (page > totalPage) {
+			page = totalPage;
+		}
 
-    model.addAttribute("searchForm", form);
-    model.addAttribute("itemList", itemPage.getItemList());
-    model.addAttribute("size", itemPage.getSize());
-    model.addAttribute("page", itemPage.getPage());
-    model.addAttribute("totalPage", itemPage.getTotalPage()); // 表示用
-    session.setAttribute("totalPage", itemPage.getTotalPage()); // サーバー用
-    return "list";
-  }
+		// 検索条件の設定
+		ItemPage item = new ItemPage(form.getItemName(), form.getBrand(), form.getParentCategory(),
+				form.getChildCategory(), form.getGrandChildCategory(), page);
+		ItemPage itemPage = service.showAllItems(item);
 
-  @RequestMapping("/detail")
-  public String detail(Integer id, Model model) {
-    Item item = service.showDetail(id);
-    model.addAttribute("item", item);
-    return "detail";
-  }
+		model.addAttribute("searchForm", form);
+		model.addAttribute("itemList", itemPage.getItemList());
+		model.addAttribute("size", itemPage.getSize());
+		model.addAttribute("page", itemPage.getPage());
+		model.addAttribute("totalPage", itemPage.getTotalPage()); // 表示用
+		session.setAttribute("totalPage", itemPage.getTotalPage()); // サーバー用
+		return "list";
+	}
 
-  @RequestMapping("/to-edit")
-  public String toEdit(Integer id, Model model) {
-    EditForm editForm = new EditForm();
-    Item item = service.showDetail(id);
-    BeanUtils.copyProperties(item, editForm);
-    editForm.setId(item.getId().toString());
-    editForm.setPrice(item.getPrice().toString());
-    model.addAttribute("editForm", editForm);
-    return "edit";
-  }
+	////////////////////////////////////
+	//// 商品追加画面の表示&商品の追加
+	////////////////////////////////////
+	@RequestMapping("/add")
+	public String add() {
+		return "add";
+	}
 
-  @RequestMapping("/edit")
-  public String edit(@Validated EditForm form, BindingResult result, RedirectAttributes redirectAttributes,
-      Model model) {
-    if (result.hasErrors()) {
-      model.addAttribute("editForm", form);
-      return "edit";
-    }
-    Item item = new Item();
-    BeanUtils.copyProperties(form, item);
-    item.setId(form.getIntId());
-    item.setPrice(form.getDouPrice());
-    service.saveItem(item);
-    redirectAttributes.addAttribute("id", item.getId());
-    return "redirect:/detail/?id={id}";
-  }
+	////////////////////////////////////
+	//// 商品詳細画面の表示
+	////////////////////////////////////
+	@RequestMapping("/detail")
+	public String detail(Integer id, Model model) {
+		Item item = service.showDetail(id);
+		model.addAttribute("item", item);
+		return "detail";
+	}
+
+	////////////////////////////////////
+	//// 商品編集画面の表示&商品の変更
+	////////////////////////////////////
+	@RequestMapping("/to-edit")
+	public String toEdit(Integer id, Model model) {
+		EditForm editForm = new EditForm();
+		Item item = service.showDetail(id);
+		BeanUtils.copyProperties(item, editForm);
+		editForm.setId(item.getId().toString());
+		editForm.setPrice(item.getPrice().toString());
+		model.addAttribute("editForm", editForm);
+		return "edit";
+	}
+
+	@RequestMapping("/edit")
+	public String edit(@Validated EditForm form, BindingResult result, RedirectAttributes redirectAttributes,
+			Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("editForm", form);
+			return "edit";
+		}
+		Item item = new Item();
+		BeanUtils.copyProperties(form, item);
+		item.setId(form.getIntId());
+		item.setPrice(form.getDouPrice());
+		service.saveItem(item);
+		redirectAttributes.addAttribute("id", item.getId());
+		return "redirect:/detail/?id={id}";
+	}
 }
