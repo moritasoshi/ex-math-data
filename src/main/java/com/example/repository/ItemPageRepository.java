@@ -49,9 +49,9 @@ public class ItemPageRepository {
     final String fromSql = "FROM test_items AS ite LEFT JOIN relations AS rel1 ON  ite.category = rel1.descendant_id LEFT JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id LEFT JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel1.descendant_id = cat3.id ";
     final String nameSql = "WHERE ite.name ILIKE :name ";
     String brandSql = "AND ite.brand ILIKE :brand ";
-    String parentSql = "AND (cat1.id ISNULL OR (cat1.depth=1 AND  cat1.name LIKE :parent)) ";
-    String childSql = "AND (cat2.id ISNULL OR (cat2.depth=2 AND  cat2.name LIKE :child)) ";
-    String grandChildSql = "AND (cat3.id ISNULL OR (cat3.depth=3 AND  cat3.name LIKE :grandChild)) ";
+    String parentSql = "AND (cat1.id ISNULL OR (cat1.depth=1 AND cat1.name LIKE :parent)) ";
+    String childSql = "AND (cat2.id ISNULL OR (cat2.depth=2 AND cat2.name LIKE :child)) ";
+    String grandChildSql = "AND (cat3.id ISNULL OR (cat3.depth=3 AND cat3.name LIKE :grandChild)) ";
     final String orderSql = "ORDER BY ite.id LIMIT :limit OFFSET :offset";
 
     // name
@@ -73,14 +73,14 @@ public class ItemPageRepository {
     if ("".equals(child)) {
       paramMap.put("child", "%");
     } else {
-      childSql = "AND (cat1.depth=1 AND  cat1.name LIKE :child) ";
+      childSql = "AND (cat2.depth=2 AND  cat2.name LIKE :child) ";
       paramMap.put("child", child);
     }
     // grandChild
     if ("".equals(grandChild)) {
       paramMap.put("grandChild", "%");
     } else {
-      grandChildSql = "AND (cat1.depth=1 AND  cat1.name LIKE :grandChild) ";
+      grandChildSql = "AND (cat3.depth=3 AND  cat3.name LIKE :grandChild) ";
       paramMap.put("grandChild", grandChild);
     }
     // LIMIT OFFSET
