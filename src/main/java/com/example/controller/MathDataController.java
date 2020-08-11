@@ -2,7 +2,8 @@ package com.example.controller;
 
 import com.example.domain.Item;
 import com.example.domain.ItemPage;
-import com.example.form.EditForm;
+import com.example.form.AddItemForm;
+import com.example.form.EditItemForm;
 import com.example.form.SearchForm;
 import com.example.service.MathDataService;
 
@@ -50,8 +51,8 @@ public class MathDataController {
 		}
 
 		// 検索条件の設定
-		ItemPage item = new ItemPage(form.getItemName(), form.getBrand(), form.getParentCategory(),
-				form.getChildCategory(), form.getGrandChildCategory(), page);
+		ItemPage item = new ItemPage(form.getItemName(), form.getBrand(), form.getParentCategory(), form.getChildCategory(),
+				form.getGrandChildCategory(), page);
 		ItemPage itemPage = service.showAllItems(item);
 
 		model.addAttribute("searchForm", form);
@@ -66,9 +67,27 @@ public class MathDataController {
 	////////////////////////////////////
 	//// 商品追加画面の表示&商品の追加
 	////////////////////////////////////
-	@RequestMapping("/add")
-	public String add() {
+	@RequestMapping("/to-add")
+	public String toAdd(Model model) {
+		AddItemForm form = new AddItemForm();
+		model.addAttribute("addItemForm", form);
 		return "add";
+	}
+
+	@RequestMapping("/add")
+	public String add(@Validated AddItemForm form, BindingResult result, RedirectAttributes redirectAttributes,
+			Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("addItemForm", form);
+			return "add";
+		}
+		Item item = new Item();
+		BeanUtils.copyProperties(form, item);
+		item.setPrice(form.getDouPrice());
+		item.setCondition(form.getIntCondition());
+		Integer itemId = service.saveItem(item);
+		redirectAttributes.addAttribute("id", itemId);
+		return "redirect:/detail/?id={id}";
 	}
 
 	////////////////////////////////////
@@ -86,28 +105,30 @@ public class MathDataController {
 	////////////////////////////////////
 	@RequestMapping("/to-edit")
 	public String toEdit(Integer id, Model model) {
-		EditForm editForm = new EditForm();
+		EditItemForm form = new EditItemForm();
 		Item item = service.showDetail(id);
-		BeanUtils.copyProperties(item, editForm);
-		editForm.setId(item.getId().toString());
-		editForm.setPrice(item.getPrice().toString());
-		model.addAttribute("editForm", editForm);
+		BeanUtils.copyProperties(item, form);
+		form.setId(item.getId().toString());
+		form.setPrice(item.getPrice().toString());
+		form.setCondition(item.getCondition().toString());
+		model.addAttribute("editItemForm", form);
 		return "edit";
 	}
 
 	@RequestMapping("/edit")
-	public String edit(@Validated EditForm form, BindingResult result, RedirectAttributes redirectAttributes,
+	public String edit(@Validated EditItemForm form, BindingResult result, RedirectAttributes redirectAttributes,
 			Model model) {
 		if (result.hasErrors()) {
-			model.addAttribute("editForm", form);
+			model.addAttribute("editItemForm", form);
 			return "edit";
 		}
 		Item item = new Item();
 		BeanUtils.copyProperties(form, item);
 		item.setId(form.getIntId());
 		item.setPrice(form.getDouPrice());
-		service.saveItem(item);
-		redirectAttributes.addAttribute("id", item.getId());
+		item.setCondition(form.getIntCondition());
+		Integer itemId = service.saveItem(item);
+		redirectAttributes.addAttribute("id", itemId);
 		return "redirect:/detail/?id={id}";
 	}
 }

@@ -26,8 +26,8 @@ public class MathDataService {
     return itemRepository.loadItem(id);
   }
 
-  public void saveItem(Item item){
-    itemRepository.save(item);
+  public Integer saveItem(Item item){
+    return itemRepository.save(item);
   }
 
   public ItemPage showAllItems(ItemPage itemPage) {
