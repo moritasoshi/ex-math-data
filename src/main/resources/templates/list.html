@@ -101,9 +101,9 @@
                 Keyboard</a></td>
             <td class="item-price" th:text="*{price}">52.0</td>
             <td class="item-category">
-              <a href="" th:text="*{parent}">Electronics</a> /
-              <a href="" th:text="*{child}">Electronics</a> /
-              <a href="" th:text="*{grandChild}">Electronics</a>
+              <a th:href="@{/(parentCategory=*{parent})}" th:text="*{parent}">Electronics</a> /
+              <a th:href="@{/(parentCategory=*{parent}, childCategory=*{child})}" th:text="*{child}">Electronics</a> /
+              <a th:href="@{/(parentCategory=*{parent}, childCategory=*{child}, grandChildCategory=*{grandChild})}" th:text="*{grandChild}">Electronics</a>
             <td class="item-brand" th:text="*{brand}"><a href="">Razer</a></td>
             <td class="item-condition" th:text="*{condition}">3</td>
           </tr>
