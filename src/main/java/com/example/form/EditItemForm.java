@@ -1,11 +1,8 @@
 package com.example.form;
 
-import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Data
 public class EditItemForm {
   @Pattern(regexp = "\\d{1,9}", message = "The id is incorrect.")
   private String id;
@@ -36,4 +33,85 @@ public class EditItemForm {
   public Double getDouPrice() {
     return Double.parseDouble(this.price);
   }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getCondition() {
+    return this.condition;
+  }
+
+  public void setCondition(String condition) {
+    this.condition = condition;
+  }
+
+  public String getParent() {
+    return this.parent;
+  }
+
+  public void setParent(String parent) {
+    this.parent = parent;
+  }
+
+  public String getChild() {
+    return this.child;
+  }
+
+  public void setChild(String child) {
+    this.child = child;
+  }
+
+  public String getGrandChild() {
+    return this.grandChild;
+  }
+
+  public void setGrandChild(String grandChild) {
+    this.grandChild = grandChild;
+  }
+
+  public String getBrand() {
+    return this.brand;
+  }
+
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
+
+  public String getPrice() {
+    return this.price;
+  }
+
+  public void setPrice(String price) {
+    this.price = price;
+  }
+
+  public Integer getShipping() {
+    return this.shipping;
+  }
+
+  public void setShipping(Integer shipping) {
+    this.shipping = shipping;
+  }
+
+  public String getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
 }

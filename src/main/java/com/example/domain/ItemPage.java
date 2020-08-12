@@ -2,9 +2,6 @@ package com.example.domain;
 
 import java.util.List;
 
-import lombok.Data;
-
-@Data
 public class ItemPage extends Item {
   private List<Item> itemList;
   // ページング関連
@@ -20,4 +17,45 @@ public class ItemPage extends Item {
 
   public ItemPage() {
   }
+
+  public List<Item> getItemList() {
+    return this.itemList;
+  }
+
+  public void setItemList(List<Item> itemList) {
+    this.itemList = itemList;
+  }
+
+  public Integer getSize() {
+    return this.size;
+  }
+
+  public void setSize(Integer size) {
+    this.size = size;
+  }
+
+  public Integer getPage() {
+    return this.page;
+  }
+
+  public void setPage(Integer page) {
+    this.page = page;
+  }
+
+  public Integer getPageSize() {
+    return this.pageSize;
+  }
+
+  public void setPageSize(Integer pageSize) {
+    this.pageSize = pageSize;
+  }
+
+  public Integer getTotalPage() {
+    return this.totalPage;
+  }
+
+  public void setTotalPage(Integer totalPage) {
+    this.totalPage = totalPage;
+  }
+
 }
