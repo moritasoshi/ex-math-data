@@ -2,9 +2,11 @@ package com.example.controller;
 
 import com.example.domain.Item;
 import com.example.domain.ItemPage;
+import com.example.domain.User;
 import com.example.form.AddItemForm;
 import com.example.form.EditItemForm;
 import com.example.form.SearchForm;
+import com.example.form.UserForm;
 import com.example.service.MathDataService;
 
 import static java.util.Objects.isNull;
@@ -131,4 +133,39 @@ public class MathDataController {
 		redirectAttributes.addAttribute("id", itemId);
 		return "redirect:/detail/?id={id}";
 	}
+
+	////////////////////////////////////
+	//// ログイン画面
+	////////////////////////////////////
+	@RequestMapping("/to-login")
+	public String toLogin() {
+		return "login";
+	}
+	@RequestMapping("/login")
+	public String login() {
+		return "list";
+	}
+
+	////////////////////////////////////
+	//// ユーザー登録
+	////////////////////////////////////
+	@RequestMapping("/to-register")
+	public String toRegister(Model model) {
+		UserForm form = new UserForm();
+		model.addAttribute("userForm", form);
+		return "register";
+	}
+
+	@RequestMapping("/register")
+	public String register(@Validated UserForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("userForm", form);
+			return "register";
+		}
+		User user = new User();
+		BeanUtils.copyProperties(form, user);
+		service.saveUser(user);
+		return "redirect:/to-login";
+	}
+
 }

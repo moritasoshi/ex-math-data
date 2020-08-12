@@ -6,6 +6,7 @@ import com.example.domain.*;
 import com.example.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,12 @@ public class MathDataService {
   @Autowired
   private ItemPageRepository itemPageRepository;
   @Autowired
+  private UserRepository userRepository;
+  @Autowired
   private CategoryRepository categoryRepository;
+
+  @Autowired
+	private PasswordEncoder passwordEncoder;
 
   private static final int PAGE_SIZE = 30;
 
@@ -26,8 +32,14 @@ public class MathDataService {
     return itemRepository.loadItem(id);
   }
 
-  public Integer saveItem(Item item){
+  public Integer saveItem(Item item) {
     return itemRepository.save(item);
+  }
+
+  public void saveUser(User user) {
+    String inputPassword = user.getPassword();
+		user.setPassword(passwordEncoder.encode(inputPassword));
+    userRepository.save(user);
   }
 
   public ItemPage showAllItems(ItemPage itemPage) {
