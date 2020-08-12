@@ -1,11 +1,10 @@
 $(function() {
-	// // 0. security認証
-	// var token = $("meta[name='_csrf']").attr('content');
-	// var header = $("meta[name='_csrf_header']").attr('content');
-	// $(document).ajaxSend(function(e, xhr, options) {
-	// 	xhr.setRequestHeader(header, token);
-	// });
-
+	// 0. security認証
+	var token = $("meta[name='_csrf']").attr('content');
+	var header = $("meta[name='_csrf_header']").attr('content');
+	$(document).ajaxSend(function(e, xhr, options) {
+		xhr.setRequestHeader(header, token);
+	});
 	//// 画面描画直後に親カテゴリのセレクトボックスを自動生成
 	// 親カテゴリ
 	setUpParentCategory();

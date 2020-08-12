@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <body>
 
@@ -14,15 +14,19 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">Rakus Items</a>
+        <a class="navbar-brand" th:href="@{/}">Rakus Items</a>
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <div>
           <ul class="nav navbar-nav navbar-right">
-            <li><a id="logout" href="./login.html">Logout <i class="fa fa-power-off"></i></a></li>
+            <li><a id="logout" th:href="@{/logout}">Logout <i class="fa fa-power-off"></i></a></li>
           </ul>
           <p class="navbar-text navbar-right">
-            <span id="loginName">user: userName</span>
+            <span id="loginName">user:&nbsp;
+              <span sec:authorize="isAuthenticated()">
+                <span sec:authentication="principal.user.mailAddress">userName</span>
+              </span>
+            </span>
           </p>
         </div>
       </div>
@@ -32,7 +36,7 @@
   <div th:fragment="navbar-simple">
     <!-- navbar -->
     <nav class="navbar navbar-inverse">
-      <a class="navbar-brand" href="/">Rakus Items</a>
+      <a class="navbar-brand" th:href="@{/}">Rakus Items</a>
     </nav>
   </div>
 
