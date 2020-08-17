@@ -20,6 +20,9 @@ div#select-page{
 div#addItemButton{
   text-align: right;
 }
+div#addCategoryButton{
+  text-align: right;
+}
 table#item-table{
   margin-bottom: 0;
 }
