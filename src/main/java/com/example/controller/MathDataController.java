@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.domain.Item;
 import com.example.domain.ItemPage;
 import com.example.domain.User;
+import com.example.form.AddCategoryForm;
 import com.example.form.AddItemForm;
 import com.example.form.EditItemForm;
 import com.example.form.SearchForm;
@@ -37,6 +38,43 @@ public class MathDataController {
 		return new SearchForm();
 	}
 
+	////// ユーザー関連
+	////////////////////////////////////
+	//// ログイン画面
+	////////////////////////////////////
+	@RequestMapping("/to-login")
+	public String toLogin() {
+		return "login";
+	}
+
+	@RequestMapping("/login")
+	public String login() {
+		return "list";
+	}
+
+	////////////////////////////////////
+	//// ユーザー登録
+	////////////////////////////////////
+	@RequestMapping("/to-register")
+	public String toRegister(Model model) {
+		UserForm form = new UserForm();
+		model.addAttribute("userForm", form);
+		return "register";
+	}
+
+	@RequestMapping("/register")
+	public String register(@Validated UserForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("userForm", form);
+			return "register";
+		}
+		User user = new User();
+		BeanUtils.copyProperties(form, user);
+		service.saveUser(user);
+		return "redirect:/to-login";
+	}
+
+	////// Item関連
 	////////////////////////////////////
 	//// 商品一覧画面の表示＆検索機能
 	////////////////////////////////////
@@ -134,38 +172,36 @@ public class MathDataController {
 		return "redirect:/detail/?id={id}";
 	}
 
+	////// Category関連
 	////////////////////////////////////
-	//// ログイン画面
+	//// カテゴリー一覧の表示
 	////////////////////////////////////
-	@RequestMapping("/to-login")
-	public String toLogin() {
-		return "login";
-	}
-	@RequestMapping("/login")
-	public String login() {
-		return "list";
-	}
-
-	////////////////////////////////////
-	//// ユーザー登録
-	////////////////////////////////////
-	@RequestMapping("/to-register")
-	public String toRegister(Model model) {
-		UserForm form = new UserForm();
-		model.addAttribute("userForm", form);
-		return "register";
+	@RequestMapping("/category")
+	public String category(Model model) {
+		AddCategoryForm form = new AddCategoryForm();
+		model.addAttribute("addCategoryForm", form);
+		return "list_category";
 	}
 
-	@RequestMapping("/register")
-	public String register(@Validated UserForm form, BindingResult result, Model model) {
-		if (result.hasErrors()) {
-			model.addAttribute("userForm", form);
-			return "register";
-		}
-		User user = new User();
-		BeanUtils.copyProperties(form, user);
-		service.saveUser(user);
-		return "redirect:/to-login";
+
+	////////////////////////////////////
+	//// カテゴリーの追加
+	////////////////////////////////////
+	@RequestMapping("/category/to-add")
+	public String toAddCategory(Model model) {
+		AddCategoryForm form = new AddCategoryForm();
+		model.addAttribute("addCategoryForm", form);
+		return "add_category";
+	}
+
+	@RequestMapping("/category/add")
+	public String addCategory(@Validated AddCategoryForm form, BindingResult result,
+			RedirectAttributes redirectAttributes, Model model) {
+		// if (result.hasErrors()) {
+		// 	model.addAttribute("addCategoryForm", form);
+		// 	return "add_category";
+		// }
+		return "redirect:/category";
 	}
 
 }
