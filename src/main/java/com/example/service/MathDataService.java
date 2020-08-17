@@ -22,6 +22,8 @@ public class MathDataService {
   private UserRepository userRepository;
   @Autowired
   private CategoryRepository categoryRepository;
+  @Autowired
+  private CategoryForViewRepository categoryForViewRepository;
 
   @Autowired
 	private PasswordEncoder passwordEncoder;
@@ -57,5 +59,9 @@ public class MathDataService {
 
   public List<String> showAllGrandChildCategory(String parent, String child) {
     return categoryRepository.findAllGrandChildByParentAndChild(parent, child);
+  }
+
+  public List<CategoryForView> showAllCategory(){
+    return categoryForViewRepository.findAll();
   }
 }

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.domain.CategoryForView;
 import com.example.domain.Item;
 import com.example.domain.ItemPage;
 import com.example.domain.User;
@@ -11,6 +12,8 @@ import com.example.form.UserForm;
 import com.example.service.MathDataService;
 
 import static java.util.Objects.isNull;
+
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -178,8 +181,8 @@ public class MathDataController {
 	////////////////////////////////////
 	@RequestMapping("/category")
 	public String category(Model model) {
-		AddCategoryForm form = new AddCategoryForm();
-		model.addAttribute("addCategoryForm", form);
+		List<CategoryForView> catList = service.showAllCategory();
+		model.addAttribute("catList", catList);
 		return "list_category";
 	}
 

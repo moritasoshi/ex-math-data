@@ -41,41 +41,18 @@
       <table id="item-table" class="table table-hover table-condensed">
         <thead>
           <tr>
+            <th>no.</th>
             <th>parent name</th>
             <th>child name</th>
             <th>grandchild name</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>Beauty</th>
-            <th>Makeup</th>
-            <th>Body</th>
-          </tr>
-          <tr>
-            <th>Beauty</th>
-            <th>Makeup</th>
-            <th>Brushes & Applicators</th>
-          </tr>
-          <tr>
-            <th>Beauty</th>
-            <th>Makeup</th>
-            <th>Eyes</th>
-          </tr>
-          <tr>
-            <th>Beauty</th>
-            <th>Fragrance</th>
-            <th>Candles & Home Scents</th>
-          </tr>
-          <tr>
-            <th>Home</th>
-            <th>Bedding</th>
-            <th>Candles & Home Scents</th>
-          </tr>
-          <tr>
-            <th>Home</th>
-            <th>Bedding</th>
-            <th>Bed Pillows</th>
+          <tr th:each="category, stat : ${catList}" th:object="${category}">
+            <td th:text="${stat.count}">1</td>
+            <td th:text="*{parent}">Beauty</td>
+            <td th:text="*{child}">Beauty</td>
+            <td th:text="*{grandChild}">Beauty</td>
           </tr>
         </tbody>
       </table>
