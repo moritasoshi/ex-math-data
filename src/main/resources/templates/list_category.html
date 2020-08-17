@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  <!-- css -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/css/mercari.css" />
+  <!-- script -->
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  <script th:src="@{/js/list.js}"></script>
+
+  <title>Rakus Items</title>
+</head>
+
+<body>
+  <!-- navbar -->
+  <div th:insert="~{fragment_navbar :: navbar}"></div>
+
+  <div id="main" class="container-fluid">
+    <!-- addCategory link -->
+    <div id="addCategoryButton">
+      <a class="btn btn-default" th:href="@{/category/to-add}"><i class="fa fa-plus-square-o"></i> Add New Category</a>
+    </div>
+
+
+    <!-- table -->
+    <div class="table-responsive">
+      <table id="item-table" class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <th>parent name</th>
+            <th>child name</th>
+            <th>grandchild name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Beauty</th>
+            <th>Makeup</th>
+            <th>Body</th>
+          </tr>
+          <tr>
+            <th>Beauty</th>
+            <th>Makeup</th>
+            <th>Brushes & Applicators</th>
+          </tr>
+          <tr>
+            <th>Beauty</th>
+            <th>Makeup</th>
+            <th>Eyes</th>
+          </tr>
+          <tr>
+            <th>Beauty</th>
+            <th>Fragrance</th>
+            <th>Candles & Home Scents</th>
+          </tr>
+          <tr>
+            <th>Home</th>
+            <th>Bedding</th>
+            <th>Candles & Home Scents</th>
+          </tr>
+          <tr>
+            <th>Home</th>
+            <th>Bedding</th>
+            <th>Bed Pillows</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</body>
+
+</html>
