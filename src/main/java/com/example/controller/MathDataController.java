@@ -229,7 +229,7 @@ public class MathDataController {
 	////////////////////////////////////
 	//// カテゴリーの追加
 	////////////////////////////////////
-	@RequestMapping("/category/to-add")
+	@RequestMapping("/category/toAdd")
 	public String toAddCategory(Model model) {
 		AddCategoryForm form = new AddCategoryForm();
 		model.addAttribute("addCategoryForm", form);
@@ -237,7 +237,7 @@ public class MathDataController {
 	}
 
 	@RequestMapping("/category/add")
-	public String addCategory(@Validated AddCategoryForm form, BindingResult result,
+	public String addCategory(String cmd, @Validated AddCategoryForm form, BindingResult result,
 			RedirectAttributes redirectAttributes, Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("addCategoryForm", form);
@@ -247,6 +247,9 @@ public class MathDataController {
 		BeanUtils.copyProperties(form, category);
 		service.saveCategory(category);
 
+		if ("another".equals(cmd)) {
+			return "redirect:/category/toAdd";
+		}
 		return "redirect:/category";
 	}
 
