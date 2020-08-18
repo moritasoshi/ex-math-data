@@ -72,6 +72,10 @@ public class MathDataService {
     userRepository.save(user);
   }
 
+  public void deleteCategory(Category category){
+    categoryRepository.delete(category);
+  }
+
   public ItemPage showAllItems(ItemPage itemPage) {
     itemPage.setPageSize(PAGE_SIZE);
     return itemPageRepository.findByAll(itemPage);

@@ -253,4 +253,14 @@ public class MathDataController {
 		return "redirect:/category";
 	}
 
+	@RequestMapping("/category/delete")
+	public String deleteCategory(Integer id, String name){
+		// id, name
+		Category category = new Category();
+		category.setId(id);
+		category.setName(name);
+		service.deleteCategory(category);
+		return "redirect:/category";
+	}
+
 }

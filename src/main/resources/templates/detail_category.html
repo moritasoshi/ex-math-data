@@ -19,6 +19,16 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
     crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    function Check() {
+      var checked = confirm("Are you sure you want to delete it?");
+      if (checked == true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  </script>
   <title>Rakus Items</title>
 </head>
 
@@ -50,6 +60,9 @@
       </table>
       <a type="button" class="btn btn-default" th:href="@{/category/to-edit(id=${category.id})}"><i
           class="fa fa-pencil-square-o"></i>&nbsp;edit</a>
+      <a type="button" onClick="return Check()" class="btn btn-default"
+        th:href="@{/category/delete(id=${category.id}, name=${category.name})}"><i
+          class="fa fa-trash"></i>&nbsp;delete</a>
     </div>
   </div>
 </body>

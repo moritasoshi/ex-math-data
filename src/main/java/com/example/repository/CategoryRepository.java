@@ -167,4 +167,15 @@ public class CategoryRepository {
     Integer maxId = template.queryForObject(sql, param, Integer.class);
     return maxId;
   }
+
+  public void delete(Category category) {
+    String sql = "DELETE FROM category WHERE id = :id AND name = :name;";
+    SqlParameterSource param = new MapSqlParameterSource().addValue("id", category.getId()).addValue("name",
+        category.getName());
+    Integer rows = template.update(sql, param);
+    if (rows > 0) {
+      sql = "DELETE FROM relations WHERE ancestor_id = :id;";
+      template.update(sql, param);
+    }
+  }
 }
