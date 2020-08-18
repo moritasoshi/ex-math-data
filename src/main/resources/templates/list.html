@@ -109,7 +109,9 @@
               <a th:href="@{/(parentCategory=*{parent}, childCategory=*{child})}" th:text="*{child}">Electronics</a> /
               <a th:href="@{/(parentCategory=*{parent}, childCategory=*{child}, grandChildCategory=*{grandChild})}"
                 th:text="*{grandChild}">Electronics</a>
-            <td class="item-brand" th:text="*{brand}"><a href="">Razer</a></td>
+            <td class="item-brand">
+              <a th:href="@{/(brand=*{brand})}" th:text="*{brand}">Razer</a>
+            </td>
             <td class="item-condition" th:text="*{condition}">3</td>
           </tr>
         </tbody>
