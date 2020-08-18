@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.domain.Category;
 import com.example.domain.CategoryForView;
 import com.example.domain.Item;
 import com.example.domain.ItemPage;
@@ -186,6 +187,57 @@ public class MathDataController {
 		return "list_category";
 	}
 
+	////////////////////////////////////
+	//// カテゴリー詳細の表示
+	////////////////////////////////////
+	@RequestMapping("/category/detail")
+	public String categoryDetail(Integer id, Model model) {
+		Category category = service.showCategory(id);
+		model.addAttribute("category", category);
+		return "detail_category";
+	}
+
+	////////////////////////////////////
+	//// カテゴリーの編集
+	////////////////////////////////////
+	@RequestMapping("/category/to-edit")
+	public String categoryToEdit(Integer id, Model model) {
+		return "edit_category";
+	}
+
+	// @RequestMapping("/to-edit")
+	// public String toEdit(Integer id, Model model) {
+	// 	EditItemForm form = new EditItemForm();
+	// 	Item item = service.showDetail(id);
+	// 	BeanUtils.copyProperties(item, form);
+	// 	form.setId(item.getId().toString());
+	// 	form.setPrice(item.getPrice().toString());
+	// 	form.setCondition(item.getCondition().toString());
+	// 	model.addAttribute("editItemForm", form);
+	// 	return "edit";
+	// }
+
+	@RequestMapping("/category/edit")
+	public String categoryEdit(){
+		return "redirect:/category/detail/?id={id}";
+	}
+
+	// @RequestMapping("/edit")
+	// public String edit(@Validated EditItemForm form, BindingResult result, RedirectAttributes redirectAttributes,
+	// 		Model model) {
+	// 	if (result.hasErrors()) {
+	// 		model.addAttribute("editItemForm", form);
+	// 		return "edit";
+	// 	}
+	// 	Item item = new Item();
+	// 	BeanUtils.copyProperties(form, item);
+	// 	item.setId(form.getIntId());
+	// 	item.setPrice(form.getDouPrice());
+	// 	item.setCondition(form.getIntCondition());
+	// 	Integer itemId = service.saveItem(item);
+	// 	redirectAttributes.addAttribute("id", itemId);
+	// 	return "redirect:/detail/?id={id}";
+	// }
 
 	////////////////////////////////////
 	//// カテゴリーの追加
@@ -200,10 +252,10 @@ public class MathDataController {
 	@RequestMapping("/category/add")
 	public String addCategory(@Validated AddCategoryForm form, BindingResult result,
 			RedirectAttributes redirectAttributes, Model model) {
-		// if (result.hasErrors()) {
-		// 	model.addAttribute("addCategoryForm", form);
-		// 	return "add_category";
-		// }
+		if (result.hasErrors()) {
+			model.addAttribute("addCategoryForm", form);
+			return "add_category";
+		}
 		return "redirect:/category";
 	}
 

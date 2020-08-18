@@ -33,7 +33,10 @@ public class MathDataService {
   public Item showDetail(Integer id) {
     return itemRepository.loadItem(id);
   }
-
+  public Category showCategory(Integer id) {
+    return categoryRepository.loadCategory(id);
+  }
+  
   public Integer saveItem(Item item) {
     return itemRepository.save(item);
   }

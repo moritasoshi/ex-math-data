@@ -20,13 +20,12 @@ import org.springframework.stereotype.Repository;
 public class CategoryRepository {
   @Autowired
   private NamedParameterJdbcTemplate template;
-  
+
   private SimpleJdbcInsert insert;
   private static final RowMapper<Category> CAT_ROW_MAPPER = (rs, i) -> {
     Category category = new Category();
     category.setId(rs.getInt("id"));
     category.setName(rs.getString("name"));
-    category.setNameAll(rs.getString("name_all"));
     category.setDepth(rs.getInt("depth"));
     return category;
   };
@@ -43,6 +42,16 @@ public class CategoryRepository {
     SqlParameterSource param = new MapSqlParameterSource();
     List<Category> catList = template.query(sql, param, CAT_ROW_MAPPER);
     return catList;
+  }
+
+  public Category loadCategory(Integer id) {
+    String sql = "SELECT * FROM category WHERE id=:id";
+    SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+    List<Category> catList = template.query(sql, param, CAT_ROW_MAPPER);
+    if (catList.size() == 0) {
+      return null;
+    }
+    return catList.get(0);
   }
 
   public List<String> findAllParent() {
