@@ -18,7 +18,7 @@ public class ItemRepository {
   @Autowired
   private NamedParameterJdbcTemplate template;
 
-  private final String TABLE_NAME = "test_items";
+  private final String TABLE_NAME = "items";
 
   private static final RowMapper<Item> ITE_ROW_MAPPER = (rs, i) -> {
     Item item = new Item();

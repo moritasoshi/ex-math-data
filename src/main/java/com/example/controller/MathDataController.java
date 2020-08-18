@@ -7,6 +7,7 @@ import com.example.domain.ItemPage;
 import com.example.domain.User;
 import com.example.form.AddCategoryForm;
 import com.example.form.AddItemForm;
+import com.example.form.EditCategoryForm;
 import com.example.form.EditItemForm;
 import com.example.form.SearchForm;
 import com.example.form.UserForm;
@@ -202,42 +203,28 @@ public class MathDataController {
 	////////////////////////////////////
 	@RequestMapping("/category/to-edit")
 	public String categoryToEdit(Integer id, Model model) {
+		EditCategoryForm form = new EditCategoryForm();
+		Category category = service.showCategory(id);
+		BeanUtils.copyProperties(category, form);
+		form.setId(category.getId().toString());
+		model.addAttribute("editCategoryForm", form);
 		return "edit_category";
 	}
 
-	// @RequestMapping("/to-edit")
-	// public String toEdit(Integer id, Model model) {
-	// 	EditItemForm form = new EditItemForm();
-	// 	Item item = service.showDetail(id);
-	// 	BeanUtils.copyProperties(item, form);
-	// 	form.setId(item.getId().toString());
-	// 	form.setPrice(item.getPrice().toString());
-	// 	form.setCondition(item.getCondition().toString());
-	// 	model.addAttribute("editItemForm", form);
-	// 	return "edit";
-	// }
-
 	@RequestMapping("/category/edit")
-	public String categoryEdit(){
+	public String categoryEdit(@Validated EditCategoryForm form, BindingResult result,
+			RedirectAttributes redirectAttributes, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("editCategoryForm", form);
+			return "edit_category";
+		}
+		Category category = new Category();
+		BeanUtils.copyProperties(form, category);
+		category.setId(form.getIntId());
+		Integer categoryId = service.saveCategory(category);
+		redirectAttributes.addAttribute("id", categoryId);
 		return "redirect:/category/detail/?id={id}";
 	}
-
-	// @RequestMapping("/edit")
-	// public String edit(@Validated EditItemForm form, BindingResult result, RedirectAttributes redirectAttributes,
-	// 		Model model) {
-	// 	if (result.hasErrors()) {
-	// 		model.addAttribute("editItemForm", form);
-	// 		return "edit";
-	// 	}
-	// 	Item item = new Item();
-	// 	BeanUtils.copyProperties(form, item);
-	// 	item.setId(form.getIntId());
-	// 	item.setPrice(form.getDouPrice());
-	// 	item.setCondition(form.getIntCondition());
-	// 	Integer itemId = service.saveItem(item);
-	// 	redirectAttributes.addAttribute("id", itemId);
-	// 	return "redirect:/detail/?id={id}";
-	// }
 
 	////////////////////////////////////
 	//// カテゴリーの追加

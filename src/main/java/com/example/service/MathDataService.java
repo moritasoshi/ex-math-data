@@ -40,6 +40,9 @@ public class MathDataService {
   public Integer saveItem(Item item) {
     return itemRepository.save(item);
   }
+  public Integer saveCategory(Category category) {
+    return categoryRepository.save(category);
+  }
 
   public void saveUser(User user) {
     String inputPassword = user.getPassword();

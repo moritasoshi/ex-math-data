@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 
@@ -22,6 +23,7 @@ public class CategoryRepository {
   private NamedParameterJdbcTemplate template;
 
   private SimpleJdbcInsert insert;
+  private static final String TABLE_NAME = "category";
   private static final RowMapper<Category> CAT_ROW_MAPPER = (rs, i) -> {
     Category category = new Category();
     category.setId(rs.getInt("id"));
@@ -76,8 +78,28 @@ public class CategoryRepository {
   }
 
   public Integer save(Category category) {
-    SqlParameterSource param = new BeanPropertySqlParameterSource(category);
-    Number key = insert.executeAndReturnKey(param);
-    return key.intValue();
+    Integer categoryId = category.getId();
+    if (Objects.isNull(categoryId)) {
+      // 採番idの取得
+      categoryId = getMaxId() + 1;
+      category.setId(categoryId);
+      String insertSql = "INSERT INTO " + TABLE_NAME
+          + "( id ,name ,CONDITION ,category ,brand ,price ,shipping ,description ) VALUES( :id ,:name ,:condition ,( SELECT rel2.descendant_id AS category FROM relations AS rel1 LEFT JOIN relations AS rel2 ON  rel1.descendant_id = rel2.ancestor_id WHERE rel1.ancestor_id < rel1.descendant_id AND rel2.ancestor_id < rel2.descendant_id AND rel1.ancestor_id IN ( SELECT id FROM category WHERE name = :parent AND depth = 1 ) AND rel1.descendant_id IN( SELECT id FROM category WHERE name = :child AND depth = 2 ) AND rel2.descendant_id IN( SELECT id FROM category WHERE name = :grandChild AND depth = 3 ) ) ,:brand ,:price ,:shipping ,:description )";
+      SqlParameterSource param = new BeanPropertySqlParameterSource(category);
+      template.update(insertSql, param);
+      return categoryId;
+    } else {
+      String updateSql = "UPDATE " + TABLE_NAME
+          + " SET name = :name WHERE id = :id";
+      SqlParameterSource param = new BeanPropertySqlParameterSource(category);
+      template.update(updateSql, param);
+      return categoryId;
+    }
+  }
+  public Integer getMaxId() {
+    String sql = "SELECT MAX(id) FROM " + TABLE_NAME;
+    SqlParameterSource param = new MapSqlParameterSource();
+    Integer maxId = template.queryForObject(sql, param, Integer.class);
+    return maxId;
   }
 }

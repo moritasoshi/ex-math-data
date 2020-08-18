@@ -46,7 +46,7 @@ public class ItemPageRepository {
     final Integer offset = limit * (page - 1);
 
     String selectSql = "SELECT ite.id AS id, ite.name AS name, ite.price AS price, cat1.name AS parent, cat2.name AS child, cat3.name AS grand_child, ite.brand AS brand, ite.CONDITION AS CONDITION, ite.shipping AS shipping, ite.description AS description ";
-    final String fromSql = "FROM test_items AS ite LEFT JOIN relations AS rel1 ON  ite.category = rel1.descendant_id LEFT JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id LEFT JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel1.descendant_id = cat3.id ";
+    final String fromSql = "FROM items AS ite LEFT JOIN relations AS rel1 ON  ite.category = rel1.descendant_id LEFT JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id LEFT JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel1.descendant_id = cat3.id ";
     final String nameSql = "WHERE ite.name ILIKE :name ";
     String brandSql = "AND ite.brand ILIKE :brand ";
     String parentSql = "AND (cat1.id ISNULL OR (cat1.depth=1 AND cat1.name LIKE :parent)) ";
