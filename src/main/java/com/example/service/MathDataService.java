@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.example.domain.*;
 import com.example.repository.*;
@@ -26,27 +27,48 @@ public class MathDataService {
   private CategoryForViewRepository categoryForViewRepository;
 
   @Autowired
-	private PasswordEncoder passwordEncoder;
+  private PasswordEncoder passwordEncoder;
 
   private static final int PAGE_SIZE = 30;
 
   public Item showDetail(Integer id) {
     return itemRepository.loadItem(id);
   }
+
   public Category showCategory(Integer id) {
     return categoryRepository.loadCategory(id);
   }
-  
+
   public Integer saveItem(Item item) {
     return itemRepository.save(item);
   }
+
   public Integer saveCategory(Category category) {
-    return categoryRepository.save(category);
+    Integer id;
+    String parent = category.getParent();
+    String child = category.getChild();
+    if (Objects.isNull(category.getId())) {
+      if ("".equals(parent) && "".equals(child)) { // 親子なし
+        category.setDepth(1);
+        id = categoryRepository.saveParent(category);
+      } else if (!"".equals(parent) && "".equals(child)) { // 親あり子なし
+        category.setDepth(2);
+        id = categoryRepository.saveChild(category);
+      } else if (!"".equals(parent) && !"".equals(child)) { // 親あり子あり
+        category.setDepth(3);
+        id = categoryRepository.saveGrandChild(category);
+      } else {
+        throw new NullPointerException("不正な値が含まれています");
+      }
+    } else {
+      id = categoryRepository.saveChild(category);
+    }
+    return id;
   }
 
   public void saveUser(User user) {
     String inputPassword = user.getPassword();
-		user.setPassword(passwordEncoder.encode(inputPassword));
+    user.setPassword(passwordEncoder.encode(inputPassword));
     userRepository.save(user);
   }
 
@@ -67,7 +89,7 @@ public class MathDataService {
     return categoryRepository.findAllGrandChildByParentAndChild(parent, child);
   }
 
-  public List<CategoryForView> showAllCategory(){
+  public List<CategoryForView> showAllCategory() {
     return categoryForViewRepository.findAll();
   }
 }

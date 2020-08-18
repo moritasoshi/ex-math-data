@@ -243,6 +243,10 @@ public class MathDataController {
 			model.addAttribute("addCategoryForm", form);
 			return "add_category";
 		}
+		Category category = new Category();
+		BeanUtils.copyProperties(form, category);
+		service.saveCategory(category);
+
 		return "redirect:/category";
 	}
 

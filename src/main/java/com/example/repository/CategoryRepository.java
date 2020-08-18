@@ -77,25 +77,90 @@ public class CategoryRepository {
     return parentList;
   }
 
-  public Integer save(Category category) {
+  public Integer saveGrandChild(Category category) {
     Integer categoryId = category.getId();
     if (Objects.isNull(categoryId)) {
       // 採番idの取得
       categoryId = getMaxId() + 1;
+
+      // categoryテーブルへの挿入
       category.setId(categoryId);
-      String insertSql = "INSERT INTO " + TABLE_NAME
-          + "( id ,name ,CONDITION ,category ,brand ,price ,shipping ,description ) VALUES( :id ,:name ,:condition ,( SELECT rel2.descendant_id AS category FROM relations AS rel1 LEFT JOIN relations AS rel2 ON  rel1.descendant_id = rel2.ancestor_id WHERE rel1.ancestor_id < rel1.descendant_id AND rel2.ancestor_id < rel2.descendant_id AND rel1.ancestor_id IN ( SELECT id FROM category WHERE name = :parent AND depth = 1 ) AND rel1.descendant_id IN( SELECT id FROM category WHERE name = :child AND depth = 2 ) AND rel2.descendant_id IN( SELECT id FROM category WHERE name = :grandChild AND depth = 3 ) ) ,:brand ,:price ,:shipping ,:description )";
+      String insertSql = "INSERT INTO " + TABLE_NAME + "( id, name, depth ) VALUES( :id, :name, :depth )";
       SqlParameterSource param = new BeanPropertySqlParameterSource(category);
       template.update(insertSql, param);
+
+      // relationsテーブルへの挿入
+      // 親-孫
+      String a = "INSERT INTO relations( ancestor_id, descendant_id ) VALUES( ( SELECT id FROM category WHERE name = :parent AND depth = 1 ), :id )";
+      // 子-孫
+      String b = "INSERT INTO relations( ancestor_id, descendant_id ) VALUES( ( SELECT cat2.id AS child_id FROM relations AS rel JOIN category AS cat1 ON  rel.ancestor_id = cat1.id JOIN category AS cat2 ON  rel.descendant_id = cat2.id WHERE cat1.name = :parent AND cat2.name = :child AND cat1.depth = 1 AND cat2.depth = 2 ), :id )";
+      // 孫孫
+      String c = "INSERT INTO relations( ancestor_id, descendant_id ) VALUES( :id, :id )";
+      template.update(a, param);
+      template.update(b, param);
+      template.update(c, param);
       return categoryId;
     } else {
-      String updateSql = "UPDATE " + TABLE_NAME
-          + " SET name = :name WHERE id = :id";
+      String updateSql = "UPDATE " + TABLE_NAME + " SET name = :name WHERE id = :id";
       SqlParameterSource param = new BeanPropertySqlParameterSource(category);
       template.update(updateSql, param);
       return categoryId;
     }
   }
+
+  public Integer saveChild(Category category) {
+    Integer categoryId = category.getId();
+    if (Objects.isNull(categoryId)) {
+      // 採番idの取得
+      categoryId = getMaxId() + 1;
+
+      // categoryテーブルへの挿入
+      category.setId(categoryId);
+      String insertSql = "INSERT INTO " + TABLE_NAME + "( id, name, depth ) VALUES( :id, :name, :depth )";
+      SqlParameterSource param = new BeanPropertySqlParameterSource(category);
+      template.update(insertSql, param);
+
+      // relationsテーブルへの挿入
+      // 親-子
+      String a = "INSERT INTO relations( ancestor_id, descendant_id ) VALUES( ( SELECT id FROM category WHERE name = :parent AND depth = 1 ), :id )";
+      // 子子
+      String c = "INSERT INTO relations( ancestor_id, descendant_id ) VALUES( :id, :id )";
+      template.update(a, param);
+      template.update(c, param);
+      return categoryId;
+    } else {
+      String updateSql = "UPDATE " + TABLE_NAME + " SET name = :name WHERE id = :id";
+      SqlParameterSource param = new BeanPropertySqlParameterSource(category);
+      template.update(updateSql, param);
+      return categoryId;
+    }
+  }
+
+  public Integer saveParent(Category category) {
+    Integer categoryId = category.getId();
+    if (Objects.isNull(categoryId)) {
+      // 採番idの取得
+      categoryId = getMaxId() + 1;
+
+      // categoryテーブルへの挿入
+      category.setId(categoryId);
+      String insertSql = "INSERT INTO " + TABLE_NAME + "( id, name, depth ) VALUES( :id, :name, :depth )";
+      SqlParameterSource param = new BeanPropertySqlParameterSource(category);
+      template.update(insertSql, param);
+
+      // relationsテーブルへの挿入
+      // 親親
+      String c = "INSERT INTO relations( ancestor_id, descendant_id ) VALUES( :id, :id )";
+      template.update(c, param);
+      return categoryId;
+    } else {
+      String updateSql = "UPDATE " + TABLE_NAME + " SET name = :name WHERE id = :id";
+      SqlParameterSource param = new BeanPropertySqlParameterSource(category);
+      template.update(updateSql, param);
+      return categoryId;
+    }
+  }
+
   public Integer getMaxId() {
     String sql = "SELECT MAX(id) FROM " + TABLE_NAME;
     SqlParameterSource param = new MapSqlParameterSource();
