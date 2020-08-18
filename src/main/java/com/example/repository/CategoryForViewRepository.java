@@ -20,6 +20,9 @@ public class CategoryForViewRepository {
   private SimpleJdbcInsert insert;
   private static final RowMapper<CategoryForView> CATFORVIEW_ROW_MAPPER = (rs, i) -> {
     CategoryForView category = new CategoryForView();
+    category.setParentId(rs.getInt("parent_id"));
+    category.setChildId(rs.getInt("child_id"));
+    category.setGrandChildId(rs.getInt("grand_child_id"));
     category.setParent(rs.getString("parent"));
     category.setChild(rs.getString("child"));
     category.setGrandChild(rs.getString("grand_child"));
@@ -27,7 +30,7 @@ public class CategoryForViewRepository {
   };
 
   public List<CategoryForView> findAll(){
-    String sql = "SELECT cat1.name AS parent, cat2.name AS child, cat3.name AS grand_child FROM relations AS rel1 LEFT JOIN relations AS rel2 ON  rel1.descendant_id = rel2.ancestor_id LEFT JOIN category AS cat1 ON  rel1.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel2.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel2.descendant_id = cat3.id WHERE cat1.depth = 1 AND cat2.depth = 2 AND cat3.depth = 3";
+    String sql = "SELECT cat1.id AS parent_id, cat2.id AS child_id, cat3.id AS grand_child_id, cat1.name AS parent, cat2.name AS child, cat3.name AS grand_child FROM relations AS rel1 LEFT JOIN relations AS rel2 ON  rel1.descendant_id = rel2.ancestor_id LEFT JOIN category AS cat1 ON  rel1.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel2.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel2.descendant_id = cat3.id WHERE cat1.depth = 1 AND cat2.depth = 2 AND cat3.depth = 3";
     SqlParameterSource param = new MapSqlParameterSource();
     List<CategoryForView> catList = template.query(sql, param, CATFORVIEW_ROW_MAPPER);
     return catList;

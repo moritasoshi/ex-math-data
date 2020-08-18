@@ -50,9 +50,9 @@
         <tbody>
           <tr th:each="category, stat : ${catList}" th:object="${category}">
             <td th:text="${stat.count}">1</td>
-            <td th:text="*{parent}">Beauty</td>
-            <td th:text="*{child}">Beauty</td>
-            <td th:text="*{grandChild}">Beauty</td>
+            <td><a th:href="@{/category/detail(id=*{parentId})}" th:text="*{parent}">Beauty</a></td>
+            <td><a th:href="@{/category/detail(id=*{childId})}" th:text="*{child}">Beauty</a></td>
+            <td><a th:href="@{/category/detail(id=*{grandChildId})}" th:text="*{grandChild}">Beauty</a></td>
           </tr>
         </tbody>
       </table>
