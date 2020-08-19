@@ -4,3 +4,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/mercari
     username: postgres
     password: postgres
+
+logging:
+  file:
+    path: ../log
+  level:
+    root: off
+    com.example.common.LogUtils: info

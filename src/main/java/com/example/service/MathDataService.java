@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.common.LogUtils;
 import com.example.domain.*;
 import com.example.repository.*;
 
@@ -40,7 +41,9 @@ public class MathDataService {
   }
 
   public Integer saveItem(Item item) {
-    return itemRepository.save(item);
+    Integer id = itemRepository.save(item);
+    LogUtils.info("Item", id, item.getName()); // ログ出力
+    return id;
   }
 
   public Integer saveCategory(Category category) {
@@ -63,6 +66,7 @@ public class MathDataService {
     } else {
       id = categoryRepository.saveChild(category);
     }
+    LogUtils.info("Category", id, category.getName()); // ログ出力
     return id;
   }
 
@@ -72,7 +76,7 @@ public class MathDataService {
     userRepository.save(user);
   }
 
-  public void deleteCategory(Category category){
+  public void deleteCategory(Category category) {
     categoryRepository.delete(category);
   }
 
