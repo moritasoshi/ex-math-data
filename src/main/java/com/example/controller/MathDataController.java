@@ -15,6 +15,9 @@ import com.example.service.MathDataService;
 
 import static java.util.Objects.isNull;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -28,6 +31,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 @RequestMapping("/")
@@ -254,7 +266,7 @@ public class MathDataController {
 	}
 
 	@RequestMapping("/category/delete")
-	public String deleteCategory(Integer id, String name){
+	public String deleteCategory(Integer id, String name) {
 		// id, name
 		Category category = new Category();
 		category.setId(id);
@@ -263,4 +275,28 @@ public class MathDataController {
 		return "redirect:/category";
 	}
 
+	////////////////////////////////////
+	//// csvデータのダウンロード
+	////////////////////////////////////
+	// 10000件分のデータを出力
+	@RequestMapping("/download/csv")
+	public ResponseEntity<byte[]> download() throws IOException {
+		HttpHeaders headers = new HttpHeaders();
+		addContentDisposition(headers, "items10000.csv");
+		return new ResponseEntity<>(getCsvText().getBytes("MS932"), headers, HttpStatus.OK);
+	}
+	
+	// ファイル名を付与
+	public static void addContentDisposition(HttpHeaders headers, String fileName) throws UnsupportedEncodingException {
+		String headerValue = String.format("attachment; filename=\"%s\"; filename*=UTF-8''%s", fileName,
+				UriUtils.encode(fileName, StandardCharsets.UTF_8.name()));
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, headerValue);
+	}
+	// CSVファイルの作成
+	public String getCsvText() throws JsonProcessingException {
+		List<Item> itemList = service.showAllItem();
+		CsvMapper mapper = new CsvMapper();
+		CsvSchema schema = mapper.schemaFor(Item.class).withHeader();
+		return mapper.writer(schema).writeValueAsString(itemList);
+	}
 }

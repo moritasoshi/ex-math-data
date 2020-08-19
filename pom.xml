@@ -67,6 +67,10 @@
 			<artifactId>javax.el</artifactId>
 			<version>3.0.1-b09</version>
 		</dependency>
+		<dependency>
+    	<groupId>com.fasterxml.jackson.dataformat</groupId>
+    	<artifactId>jackson-dataformat-csv</artifactId>
+  	</dependency>
 		<!-- Spring Security関連 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

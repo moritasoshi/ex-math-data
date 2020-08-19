@@ -4,12 +4,15 @@ package com.example.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.example.domain.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -57,27 +60,27 @@ public class ItemPageRepository {
     // name
     paramMap.put("name", "%" + name + "%");
     // brand
-    if ("".equals(brand)) {
+    if ("".equals(brand) || Objects.isNull(brand)) {
       brandSql = ""; // brand指定がない場合はWHERE条件から排除
     } else {
       paramMap.put("brand", "%" + brand + "%");
     }
     // parent
-    if ("".equals(parent)) {
+    if ("".equals(parent) || Objects.isNull(parent)) {
       paramMap.put("parent", "%");
     } else {
       parentSql = "AND (cat1.depth=1 AND  cat1.name LIKE :parent) ";
       paramMap.put("parent", parent);
     }
     // child
-    if ("".equals(child)) {
+    if ("".equals(child) || Objects.isNull(child)) {
       paramMap.put("child", "%");
     } else {
       childSql = "AND (cat2.depth=2 AND  cat2.name LIKE :child) ";
       paramMap.put("child", child);
     }
     // grandChild
-    if ("".equals(grandChild)) {
+    if ("".equals(grandChild) || Objects.isNull(grandChild)) {
       paramMap.put("grandChild", "%");
     } else {
       grandChildSql = "AND (cat3.depth=3 AND  cat3.name LIKE :grandChild) ";
@@ -115,5 +118,12 @@ public class ItemPageRepository {
     result.setPage(page);
     result.setTotalPage(size / limit + 1);
     return result;
+  }
+
+  public List<Item> findAll(){
+    String sql = "SELECT ite.id AS id, ite.name AS name, ite.price AS price, cat1.name AS parent, cat2.name AS child, cat3.name AS grand_child, ite.brand AS brand, ite.CONDITION AS CONDITION, ite.shipping AS shipping, ite.description AS description FROM items AS ite LEFT JOIN relations AS rel1 ON  ite.category = rel1.descendant_id LEFT JOIN relations AS rel2 ON  rel1.ancestor_id = rel2.descendant_id LEFT JOIN category AS cat1 ON  rel2.ancestor_id = cat1.id LEFT JOIN category AS cat2 ON  rel1.ancestor_id = cat2.id LEFT JOIN category AS cat3 ON  rel1.descendant_id = cat3.id WHERE ( cat1.id ISNULL OR  ( cat1.depth = 1 AND cat1.name LIKE '%' ) ) AND ( cat2.id ISNULL OR  ( cat2.depth = 2 AND cat2.name LIKE '%' ) ) AND ( cat3.id ISNULL OR  ( cat3.depth = 3 AND cat3.name LIKE '%' ) ) ORDER BY ite.id LIMIT 10000 OFFSET 0";
+    SqlParameterSource param = new MapSqlParameterSource();
+    List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER);
+    return itemList;
   }
 }

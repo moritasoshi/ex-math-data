@@ -100,4 +100,7 @@ public class MathDataService {
   public List<CategoryForView> showAllCategory() {
     return categoryForViewRepository.findAll();
   }
+  public List<Item> showAllItem() {
+    return itemPageRepository.findAll();
+  }
 }

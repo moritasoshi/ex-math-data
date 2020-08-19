@@ -7,7 +7,7 @@ spring:
 
 logging:
   file:
-    path: /Users/moritasoshi/Workspace/spring-boot-workspace/ex-math-data/src/main/resources/log
+    # path: /Users/moritasoshi/Workspace/spring-boot-workspace/ex-math-data/src/main/resources/log
   level:
-    root: off
+#    root: off
     com.example.common.LogUtils: info
