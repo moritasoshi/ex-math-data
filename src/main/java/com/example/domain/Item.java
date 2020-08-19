@@ -1,15 +1,29 @@
 package com.example.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"ID", "Name", "Price", "Parent", "Child", "GrandChild", "Brand", "Condition", "Shipping", "Description"})
 public class Item {
+  @JsonProperty("ID")
   private Integer id;
+  @JsonProperty("Name")
   private String name;
+  @JsonProperty("Condition")
   private Integer condition;
+  @JsonProperty("Parent")
   private String parent;
+  @JsonProperty("Child")
   private String child;
+  @JsonProperty("GrandChild")
   private String grandChild;
+  @JsonProperty("Brand")
   private String brand;
+  @JsonProperty("Price")
   private Double price;
+  @JsonProperty("Shipping")
   private Integer shipping;
+  @JsonProperty("Description")
   private String description;
 
   public Item(String name, String brand, String parent, String child, String grandChild) {
